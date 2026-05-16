@@ -1,0 +1,91 @@
+.search-history {
+  min-width: 220px;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.history-item {
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.history-item:hover {
+  text-decoration: underline;
+}
+
+.history-items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.history-item-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  transition: background 0.2s;
+}
+
+.history-item-wrapper:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.history-item-number {
+  font-weight: bold;
+  margin-right: 6px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.remove-history-item {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.remove-history-item:hover {
+  background: rgba(255, 0, 0, 0.2);
+}
+
+.clear-history-btn {
+  margin-top: 12px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #ff6b6b;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.clear-history-btn:hover:not(:disabled) {
+  background: #e05555;
+}
+
+.clear-history-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.empty-history {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.empty-hint {
+  font-size: 12px;
+  margin-top: 4px;
+}

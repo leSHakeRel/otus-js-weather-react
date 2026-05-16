@@ -9,6 +9,15 @@ const config = {
   transform: {
     "^.+\\.tsx?$": "ts-jest",
   },
+  coverageThreshold: {
+    global: {
+      branches: 20,
+      functions: 20,
+      lines: 20,
+      statements: 20,
+    },
+  },
+  coverageDirectory: "coverage",
 };
 
 module.exports = config;
