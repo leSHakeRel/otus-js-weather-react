@@ -3,6 +3,10 @@ import { render, screen } from "@testing-library/react";
 import { WeatherResult } from "@/components/WeatherResult";
 import type { WeatherData } from "@/types";
 
+jest.mock("@/components/WeatherMap", () => ({
+  WeatherMap: () => <div data-testid="weather-map" />,
+}));
+
 const mockWeather: WeatherData = {
   status: true,
   message: "",
@@ -93,6 +97,30 @@ describe("WeatherResult", () => {
       render(<WeatherResult weather={mockWeather} loading={false} error={null} />);
 
       expect(screen.getByText("5")).toBeInTheDocument();
+    });
+
+    it("should render map component with weather coordinates", () => {
+      render(<WeatherResult weather={mockWeather} loading={false} error={null} />);
+
+      expect(screen.getByTestId("weather-map")).toBeInTheDocument();
+    });
+
+    it("should not render map in loading state", () => {
+      render(<WeatherResult weather={null} loading={true} error={null} />);
+
+      expect(screen.queryByTestId("weather-map")).not.toBeInTheDocument();
+    });
+
+    it("should not render map in error state", () => {
+      render(<WeatherResult weather={null} loading={false} error="Error" />);
+
+      expect(screen.queryByTestId("weather-map")).not.toBeInTheDocument();
+    });
+
+    it("should not render map in empty state", () => {
+      render(<WeatherResult weather={null} loading={false} error={null} />);
+
+      expect(screen.queryByTestId("weather-map")).not.toBeInTheDocument();
     });
   });
 });

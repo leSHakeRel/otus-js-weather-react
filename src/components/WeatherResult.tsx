@@ -1,4 +1,5 @@
 import type { WeatherData } from "@/types";
+import { WeatherMap } from "@/components/WeatherMap";
 import "./WeatherResult.css";
 
 const WIND_ICON_SVG = `
@@ -58,78 +59,85 @@ export function WeatherResult({ weather, loading, error }: WeatherResultProps) {
 
   return (
     <section className="resultSection">
-      <div className="resultSection-cityName">
-        <div className="cityName-block-text" style={{ display: "flex" }}>
-          <p className="cityName-text">{weather.location.name}</p>
+      <WeatherMap
+        lat={weather.location.geo.lat}
+        lng={weather.location.geo.lng}
+        cityName={weather.location.name}
+      />
+      <div className="resultSection-dataBlock">
+        <div className="resultSection-cityName">
+          <div className="cityName-block-text" style={{ display: "flex" }}>
+            <p className="cityName-text">{weather.location.name}</p>
+          </div>
+          <div className="cityName-block-error" style={{ display: "none" }}>
+            <p className="cityName-error" />
+          </div>
         </div>
-        <div className="cityName-block-error" style={{ display: "none" }}>
-          <p className="cityName-error" />
-        </div>
-      </div>
 
-      <div className="grid-container" style={{ visibility: "visible" }}>
-        {/* Temperature cell (spans 2 cols, 2 rows) */}
-        <div className="grid-item temperatureCell">
-          <div className="cellItem">
-            <p className="weatherIcon">
-              <img
-                src={`https://cdn.discover.swiss/icons/weather/ds-weather-${weather.weatherIcon}.svg`}
-                width={64}
-                height={64}
-                alt={weather.weatherText}
+        <div className="grid-container" style={{ visibility: "visible" }}>
+          {/* Temperature cell (spans 2 cols, 2 rows) */}
+          <div className="grid-item temperatureCell">
+            <div className="cellItem">
+              <p className="weatherIcon">
+                <img
+                  src={`https://cdn.discover.swiss/icons/weather/ds-weather-${weather.weatherIcon}.svg`}
+                  width={64}
+                  height={64}
+                  alt={weather.weatherText}
+                />
+              </p>
+              <p className="weatherText">{weather.weatherText}</p>
+              <p>Температура</p>
+              <p className="temperatureValue">{fillCell(weather.temperature, "° C")}</p>
+            </div>
+          </div>
+
+          {/* Feels like */}
+          <div className="grid-item">
+            <div className="cellItem">
+              <p>Ощущается</p>
+              <p className="feelTemperatureValue">{fillCell(weather.realFeel, "° C")}</p>
+            </div>
+          </div>
+
+          {/* Pressure */}
+          <div className="grid-item">
+            <div className="cellItem">
+              <p>Давление</p>
+              <p className="pressureValue">{fillCell(weather.getPressureInMM(), " мм рт. ст.")}</p>
+            </div>
+          </div>
+
+          {/* Wind speed */}
+          <div className="grid-item">
+            <div className="cellItem">
+              <p>Скорость ветра</p>
+              <p className="windSpeedValue">{fillCell(weather.windSpeed, " км/ч")}</p>
+            </div>
+          </div>
+
+          {/* Wind direction */}
+          <div className="grid-item">
+            <div className="cellItem">
+              <p>Направл. ветра</p>
+              <p
+                className="windDirectionIcon"
+                dangerouslySetInnerHTML={{
+                  __html: WIND_ICON_SVG.replace(
+                    "</svg>",
+                    ` style="transform: rotate(${weather.windDirectionDegrees}deg); transition: transform 0.3s ease"</svg>`,
+                  ),
+                }}
               />
-            </p>
-            <p className="weatherText">{weather.weatherText}</p>
-            <p>Температура</p>
-            <p className="temperatureValue">{fillCell(weather.temperature, "° C")}</p>
+            </div>
           </div>
-        </div>
 
-        {/* Feels like */}
-        <div className="grid-item">
-          <div className="cellItem">
-            <p>Ощущается</p>
-            <p className="feelTemperatureValue">{fillCell(weather.realFeel, "° C")}</p>
-          </div>
-        </div>
-
-        {/* Pressure */}
-        <div className="grid-item">
-          <div className="cellItem">
-            <p>Давление</p>
-            <p className="pressureValue">{fillCell(weather.getPressureInMM(), " мм рт. ст.")}</p>
-          </div>
-        </div>
-
-        {/* Wind speed */}
-        <div className="grid-item">
-          <div className="cellItem">
-            <p>Скорость ветра</p>
-            <p className="windSpeedValue">{fillCell(weather.windSpeed, " км/ч")}</p>
-          </div>
-        </div>
-
-        {/* Wind direction */}
-        <div className="grid-item">
-          <div className="cellItem">
-            <p>Направл. ветра</p>
-            <p
-              className="windDirectionIcon"
-              dangerouslySetInnerHTML={{
-                __html: WIND_ICON_SVG.replace(
-                  "</svg>",
-                  ` style="transform: rotate(${weather.windDirectionDegrees}deg); transition: transform 0.3s ease"</svg>`,
-                ),
-              }}
-            />
-          </div>
-        </div>
-
-        {/* UV Index */}
-        <div className="grid-item">
-          <div className="cellItem">
-            <p>UV-индекс</p>
-            <p className="uvIndexValue">{fillCell(weather.uvIndex)}</p>
+          {/* UV Index */}
+          <div className="grid-item">
+            <div className="cellItem">
+              <p>UV-индекс</p>
+              <p className="uvIndexValue">{fillCell(weather.uvIndex)}</p>
+            </div>
           </div>
         </div>
       </div>

@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
 import App from "@/App";
 
-// Мокаем хуки, чтобы изолировать тест App
 jest.mock("@/hooks/useWeather", () => ({
   useWeather: jest.fn(),
 }));
@@ -13,6 +13,10 @@ jest.mock("@/hooks/useSearchHistory", () => ({
 
 const mockUseWeather = jest.requireMock("@/hooks/useWeather").useWeather;
 const mockUseSearchHistory = jest.requireMock("@/hooks/useSearchHistory").useSearchHistory;
+
+function renderWithRouter(ui: React.ReactElement) {
+  return render(<MemoryRouter>{ui}</MemoryRouter>);
+}
 
 describe("App", () => {
   beforeEach(() => {
@@ -35,26 +39,26 @@ describe("App", () => {
   });
 
   it("should render the heading", () => {
-    render(<App />);
+    renderWithRouter(<App />);
 
     expect(screen.getByText("Прогноз погоды")).toBeInTheDocument();
   });
 
   it("should render WeatherSearch component", () => {
-    render(<App />);
+    renderWithRouter(<App />);
 
     expect(screen.getByLabelText("Поиск по IP")).toBeInTheDocument();
     expect(screen.getByLabelText("Поиск названия города")).toBeInTheDocument();
   });
 
   it("should render WeatherResult component (initial state)", () => {
-    render(<App />);
+    renderWithRouter(<App />);
 
     expect(screen.getByText("Введите город или используйте поиск по IP")).toBeInTheDocument();
   });
 
   it("should render WeatherSearchHistory component", () => {
-    render(<App />);
+    renderWithRouter(<App />);
 
     expect(screen.getByText("История поиска")).toBeInTheDocument();
     expect(screen.getByText("История поиска пуста")).toBeInTheDocument();
@@ -69,7 +73,7 @@ describe("App", () => {
       fetchWeather,
     });
 
-    render(<App />);
+    renderWithRouter(<App />);
 
     const submitButton = screen.getByDisplayValue("Поиск");
     fireEvent.click(submitButton);
@@ -99,9 +103,8 @@ describe("App", () => {
       lastCity: null,
     });
 
-    const { rerender } = render(<App />);
+    const { rerender } = renderWithRouter(<App />);
 
-    // Submit city search
     const cityRadio = screen.getByLabelText("Поиск названия города");
     fireEvent.click(cityRadio);
 
@@ -111,11 +114,13 @@ describe("App", () => {
     const submitButton = screen.getByDisplayValue("Поиск");
     fireEvent.click(submitButton);
 
-    // Now simulate weather loaded
     const weather = {
       status: true,
       message: "",
-      location: { name: "Moscow" },
+      location: {
+        name: "Moscow",
+        geo: { lat: 55.7, lng: 37.6 },
+      },
       temperature: 20,
       getPressureInMM: () => 760,
     };
@@ -127,12 +132,12 @@ describe("App", () => {
       fetchWeather,
     });
 
-    rerender(<App />);
+    rerender(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>,
+    );
 
-    // addCity should be called for the searched city
-    // (it's called in useEffect when weather changes)
-    // Since all mocks are at module level, the pendingCityRef won't persist
-    // across re-renders in test environment. This is a simplified check.
     expect(fetchWeather).toHaveBeenCalledWith({
       type: "city",
       cityName: "Moscow",
@@ -157,7 +162,7 @@ describe("App", () => {
       lastCity: "Moscow",
     });
 
-    render(<App />);
+    renderWithRouter(<App />);
 
     const cityElement = screen.getByText("Moscow");
     fireEvent.click(cityElement);
