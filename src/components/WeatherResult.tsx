@@ -59,11 +59,7 @@ export function WeatherResult({ weather, loading, error }: WeatherResultProps) {
 
   return (
     <section className="resultSection">
-      <WeatherMap
-        lat={weather.location.geo.lat}
-        lng={weather.location.geo.lng}
-        cityName={weather.location.name}
-      />
+      <WeatherMap lat={weather.location.geo.lat} lng={weather.location.geo.lng} />
       <div className="resultSection-dataBlock">
         <div className="resultSection-cityName">
           <div className="cityName-block-text" style={{ display: "flex" }}>
