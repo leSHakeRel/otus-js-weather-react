@@ -3,6 +3,13 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import App from "@/App";
 
+const mockNavigate = jest.fn();
+
+jest.mock("react-router", () => ({
+  ...jest.requireActual("react-router"),
+  useNavigate: () => mockNavigate,
+}));
+
 jest.mock("@/hooks/useWeather", () => ({
   useWeather: jest.fn(),
 }));
@@ -64,7 +71,7 @@ describe("App", () => {
     expect(screen.getByText("История поиска пуста")).toBeInTheDocument();
   });
 
-  it("should call fetchWeather when search is submitted", () => {
+  it("should call fetchWeather when auto search is submitted", () => {
     const fetchWeather = jest.fn();
     mockUseWeather.mockReturnValue({
       weather: null,
@@ -84,10 +91,8 @@ describe("App", () => {
     });
   });
 
-  it("should add city to history when weather is loaded after city search", () => {
-    const addCity = jest.fn();
+  it("should navigate to /weather/:cityName when city search is submitted", () => {
     const fetchWeather = jest.fn();
-
     mockUseWeather.mockReturnValue({
       weather: null,
       loading: false,
@@ -95,15 +100,7 @@ describe("App", () => {
       fetchWeather,
     });
 
-    mockUseSearchHistory.mockReturnValue({
-      history: [],
-      addCity,
-      removeCity: jest.fn(),
-      clearHistory: jest.fn(),
-      lastCity: null,
-    });
-
-    const { rerender } = renderWithRouter(<App />);
+    renderWithRouter(<App />);
 
     const cityRadio = screen.getByLabelText("Поиск названия города");
     fireEvent.click(cityRadio);
@@ -114,37 +111,11 @@ describe("App", () => {
     const submitButton = screen.getByDisplayValue("Поиск");
     fireEvent.click(submitButton);
 
-    const weather = {
-      status: true,
-      message: "",
-      location: {
-        name: "Moscow",
-        geo: { lat: 55.7, lng: 37.6 },
-      },
-      temperature: 20,
-      getPressureInMM: () => 760,
-    };
-
-    mockUseWeather.mockReturnValue({
-      weather,
-      loading: false,
-      error: null,
-      fetchWeather,
-    });
-
-    rerender(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>,
-    );
-
-    expect(fetchWeather).toHaveBeenCalledWith({
-      type: "city",
-      cityName: "Moscow",
-    });
+    expect(mockNavigate).toHaveBeenCalledWith("/weather/Moscow");
+    expect(fetchWeather).not.toHaveBeenCalled();
   });
 
-  it("should call fetchWeather when history city is clicked", () => {
+  it("should navigate to /weather/:cityName when history city is clicked", () => {
     const fetchWeather = jest.fn();
 
     mockUseWeather.mockReturnValue({
@@ -167,9 +138,6 @@ describe("App", () => {
     const cityElement = screen.getByText("Moscow");
     fireEvent.click(cityElement);
 
-    expect(fetchWeather).toHaveBeenCalledWith({
-      type: "city",
-      cityName: "Moscow",
-    });
+    expect(mockNavigate).toHaveBeenCalledWith("/weather/Moscow");
   });
 });

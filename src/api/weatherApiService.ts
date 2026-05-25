@@ -137,7 +137,7 @@ export async function getCurrentWeather(
 /*  Helpers – mapping                                                 */
 /* ------------------------------------------------------------------ */
 
-function mapWeatherCodeToIcon(weatherCode: number): number {
+export function mapWeatherCodeToIcon(weatherCode: number): number {
   const iconMap: Record<number, number> = {
     0: 1,
     1: 2,
@@ -171,7 +171,7 @@ function mapWeatherCodeToIcon(weatherCode: number): number {
   return iconMap[weatherCode] || 1;
 }
 
-function getWeatherDescription(code: number): string {
+export function getWeatherDescription(code: number): string {
   const descriptions: Record<number, string> = {
     0: "Ясно",
     1: "В основном ясно",
@@ -205,7 +205,7 @@ function getWeatherDescription(code: number): string {
   return descriptions[code] || "Неизвестно";
 }
 
-function getWindDirection(degrees: number): string {
+export function getWindDirection(degrees: number): string {
   const directions = ["С", "СВ", "В", "ЮВ", "Ю", "ЮЗ", "З", "СЗ"];
   const index = Math.round(degrees / 45) % 8;
   return directions[index] || "С";

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router";
 import { useWeather } from "@/hooks/useWeather";
 import { useSearchHistory } from "@/hooks/useSearchHistory";
 import { WeatherSearch } from "@/components/WeatherSearch";
@@ -9,31 +10,32 @@ import type { SearchData } from "@/types";
 import "./App.css";
 
 function App() {
+  const navigate = useNavigate();
   const { weather, loading, error, fetchWeather } = useWeather();
   const searchHistory = useSearchHistory();
+  const { addCity } = searchHistory;
   const pendingCityRef = useRef<string | null>(null);
 
   // Добавление города в историю после успешной загрузки погоды
   useEffect(() => {
     if (weather && pendingCityRef.current) {
-      searchHistory.addCity(pendingCityRef.current);
+      addCity(pendingCityRef.current);
       pendingCityRef.current = null;
     }
-  }, [weather, searchHistory]);
+  }, [weather, addCity]);
 
   const handleSearch = (searchData: SearchData) => {
     if (searchData.type === "city" && searchData.cityName.trim()) {
       const city = searchData.cityName.trim();
-      pendingCityRef.current = city;
-    } else {
-      pendingCityRef.current = null;
+      navigate(`/weather/${encodeURIComponent(city)}`);
+      return;
     }
+    pendingCityRef.current = null;
     void fetchWeather(searchData);
   };
 
   const handleCityClick = (city: string) => {
-    pendingCityRef.current = city;
-    void fetchWeather({ type: "city", cityName: city });
+    navigate(`/weather/${encodeURIComponent(city)}`);
   };
 
   return (
