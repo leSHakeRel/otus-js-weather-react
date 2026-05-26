@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams, Link } from "react-router";
 import { useWeather } from "@/hooks/useWeather";
 import { useSearchHistory } from "@/hooks/useSearchHistory";
 import { WeatherSearch } from "@/components/WeatherSearch";
@@ -11,10 +11,18 @@ import "./App.css";
 
 function App() {
   const navigate = useNavigate();
+  const { cityName } = useParams<{ cityName: string }>();
   const { weather, loading, error, fetchWeather } = useWeather();
   const searchHistory = useSearchHistory();
   const { addCity } = searchHistory;
   const pendingCityRef = useRef<string | null>(null);
+  const isCityRoute = !!cityName;
+
+  useEffect(() => {
+    if (cityName) {
+      void fetchWeather({ type: "city", cityName });
+    }
+  }, [cityName, fetchWeather]);
 
   // Добавление города в историю после успешной загрузки погоды
   useEffect(() => {
@@ -22,7 +30,10 @@ function App() {
       addCity(pendingCityRef.current);
       pendingCityRef.current = null;
     }
-  }, [weather, addCity]);
+    if (weather && cityName) {
+      addCity(cityName);
+    }
+  }, [weather, addCity, cityName]);
 
   const handleSearch = (searchData: SearchData) => {
     if (searchData.type === "city" && searchData.cityName.trim()) {
@@ -43,7 +54,11 @@ function App() {
       <Navigation />
       <div className="app">
         <div className="main-container">
-          <WeatherSearch onSearch={handleSearch} />
+          {isCityRoute ? (
+            <h1>Прогноз погоды: {cityName}</h1>
+          ) : (
+            <WeatherSearch onSearch={handleSearch} />
+          )}
 
           <div className="row">
             <WeatherResult weather={weather} loading={loading} error={error} />
@@ -54,6 +69,16 @@ function App() {
               onClearHistory={searchHistory.clearHistory}
             />
           </div>
+
+          {isCityRoute && (
+            <Link
+              to="/main"
+              className="back-to-home"
+              style={{ display: "inline-block", marginTop: "20px" }}
+            >
+              Вернуться на главную
+            </Link>
+          )}
         </div>
       </div>
     </>

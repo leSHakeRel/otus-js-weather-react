@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import App from "@/App";
 import { About } from "@/pages/About";
-import { WeatherPage } from "@/pages/WeatherPage";
 import { NotFound } from "@/pages/NotFound";
 import "./index.css";
 
@@ -13,7 +12,7 @@ createRoot(document.getElementById("root")!).render(
       <Routes>
         <Route path="/" element={<Navigate to="/main" replace />} />
         <Route path="/main" element={<App />} />
-        <Route path="/weather/:cityName" element={<WeatherPage />} />
+        <Route path="/weather/:cityName" element={<App />} />
         <Route path="/about" element={<About />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
