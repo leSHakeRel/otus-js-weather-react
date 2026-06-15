@@ -1,0 +1,58 @@
+{
+  "name": "otus-js-weather-react",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://leshakerel.github.io/otus-js-weather-react",
+  "bugs": {
+    "url": "https://github.com/leSHakeRel/otus-js-weather-react/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leSHakeRel/otus-js-weather-react.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "lint:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.25.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.15.3",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react": "^4.4.1",
+    "eslint": "^9.25.1",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "lint-staged": "^15.5.1",
+    "prettier": "^3.5.3",
+    "ts-jest": "^29.3.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.31.1",
+    "vite": "^6.3.2"
+  }
+}
