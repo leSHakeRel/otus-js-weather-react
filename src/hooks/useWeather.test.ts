@@ -149,7 +149,6 @@ describe("useWeather", () => {
   });
 
   it("should set loading to true during fetch", async () => {
-    // Make the API call hang indefinitely so loading stays true
     mockWeatherApi.getLocationByIP.mockReturnValue(new Promise(() => {}));
 
     const { result } = renderHook(() => useWeather());

@@ -1,4 +1,9 @@
 import apiConfig from "@/api/weather.config";
+import {
+  mapWeatherCodeToIcon,
+  getWeatherDescription,
+  getWindDirection,
+} from "@/api/weatherApiService";
 
 const mockFetch = jest.fn();
 (globalThis as unknown as { fetch: jest.Mock }).fetch = mockFetch;
@@ -12,41 +17,6 @@ describe("weatherApiService", () => {
   // mapWeatherCodeToIcon
   // ------------------------------------------------------------------
   describe("mapWeatherCodeToIcon", () => {
-    // Re-implement for test isolation
-    const mapWeatherCodeToIcon = (weatherCode: number): number => {
-      const iconMap: Record<number, number> = {
-        0: 1,
-        1: 2,
-        2: 3,
-        3: 4,
-        45: 5,
-        48: 5,
-        51: 6,
-        53: 6,
-        55: 6,
-        56: 7,
-        57: 7,
-        61: 8,
-        63: 8,
-        65: 8,
-        66: 9,
-        67: 9,
-        71: 10,
-        73: 10,
-        75: 10,
-        77: 10,
-        80: 11,
-        81: 11,
-        82: 11,
-        85: 12,
-        86: 12,
-        95: 13,
-        96: 14,
-        99: 14,
-      };
-      return iconMap[weatherCode] || 1;
-    };
-
     it("should map code 0 to icon 1", () => {
       expect(mapWeatherCodeToIcon(0)).toBe(1);
     });
@@ -71,40 +41,6 @@ describe("weatherApiService", () => {
   // getWeatherDescription
   // ------------------------------------------------------------------
   describe("getWeatherDescription", () => {
-    const getWeatherDescription = (code: number): string => {
-      const descriptions: Record<number, string> = {
-        0: "Ясно",
-        1: "В основном ясно",
-        2: "Переменная облачность",
-        3: "Пасмурно",
-        45: "Туман",
-        48: "Туман",
-        51: "Легкая морось",
-        53: "Умеренная морось",
-        55: "Сильная морось",
-        56: "Ледяная морось",
-        57: "Ледяная морось",
-        61: "Небольшой дождь",
-        63: "Умеренный дождь",
-        65: "Сильный дождь",
-        66: "Ледяной дождь",
-        67: "Ледяной дождь",
-        71: "Небольшой снег",
-        73: "Умеренный снег",
-        75: "Сильный снег",
-        77: "Снежные зерна",
-        80: "Небольшой ливень",
-        81: "Умеренный ливень",
-        82: "Сильный ливень",
-        85: "Небольшой снегопад",
-        86: "Сильный снегопад",
-        95: "Гроза",
-        96: "Гроза с градом",
-        99: "Гроза с градом",
-      };
-      return descriptions[code] || "Неизвестно";
-    };
-
     it('should return "Ясно" for code 0', () => {
       expect(getWeatherDescription(0)).toBe("Ясно");
     });
@@ -122,12 +58,6 @@ describe("weatherApiService", () => {
   // getWindDirection
   // ------------------------------------------------------------------
   describe("getWindDirection", () => {
-    const getWindDirection = (degrees: number): string => {
-      const directions = ["С", "СВ", "В", "ЮВ", "Ю", "ЮЗ", "З", "СЗ"];
-      const index = Math.round(degrees / 45) % 8;
-      return directions[index] || "С";
-    };
-
     it("should return North for 0 degrees", () => {
       expect(getWindDirection(0)).toBe("С");
     });

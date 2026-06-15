@@ -2,9 +2,10 @@
 const config = {
   preset: "ts-jest",
   testEnvironment: "jsdom",
+  setupFiles: ["<rootDir>/src/__mocks__/jest-setup.cjs"],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1",
     "\\.(css|less|scss)$": "<rootDir>/src/__mocks__/styleMock.cjs",
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
   transform: {
     "^.+\\.tsx?$": "ts-jest",

@@ -72,3 +72,8 @@
   font-size: 1.2rem;
   color: #666;
 }
+
+.resultSection {
+  display: flex;
+  gap: 40px;
+}
